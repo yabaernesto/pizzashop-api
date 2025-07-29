@@ -32,6 +32,9 @@ export const sendAuthLink = new Elysia().post(
 
     authLink.searchParams.set('code', authLinkCode)
     authLink.searchParams.set('redirect', env.AUTH_REDIRECT_URL)
+
+    // biome-ignore lint/suspicious/noConsole: show
+    console.log(authLink.toString())
   },
   {
     body: t.Object({
