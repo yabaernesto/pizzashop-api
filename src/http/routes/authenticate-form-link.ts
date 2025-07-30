@@ -9,7 +9,7 @@ import { auth } from '../auth'
 export const authenticateFormLink = new Elysia().use(auth).get(
   '/auth-links/authenticate',
   async ({ query, jwt, setCookie, redirect }) => {
-    const { code, redirection } = query
+    const { code, redirect: redirection } = query
 
     const authLinkFromCode = await db.query.authLinks.findFirst({
       where(fields, { eq: eqLocal }) {
@@ -54,7 +54,7 @@ export const authenticateFormLink = new Elysia().use(auth).get(
   {
     query: t.Object({
       code: t.String(),
-      redirection: t.String(),
+      redirect: t.String(),
     }),
   }
 )

@@ -31,7 +31,7 @@ export const sendAuthLink = new Elysia().post(
     const authLink = new URL('/auth-links/authenticate', env.API_BASE_URL)
 
     authLink.searchParams.set('code', authLinkCode)
-    authLink.searchParams.set('redirection', env.AUTH_REDIRECT_URL)
+    authLink.searchParams.set('redirect', env.AUTH_REDIRECT_URL)
 
     // biome-ignore lint/suspicious/noConsole: show
     console.log(authLink.toString())
