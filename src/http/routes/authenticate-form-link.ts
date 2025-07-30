@@ -12,8 +12,8 @@ export const authenticateFormLink = new Elysia().use(auth).get(
     const { code, redirection } = query
 
     const authLinkFromCode = await db.query.authLinks.findFirst({
-      where(fields, { eq }) {
-        return eq(fields.code, code)
+      where(fields, { eq: eqLocal }) {
+        return eqLocal(fields.code, code)
       },
     })
 
@@ -31,8 +31,8 @@ export const authenticateFormLink = new Elysia().use(auth).get(
     }
 
     const managedRestaurant = await db.query.restaurants.findFirst({
-      where(fields, { eq }) {
-        return eq(fields.managerId, authLinkFromCode.userId)
+      where(fields, { eq: eqLocal }) {
+        return eqLocal(fields.managerId, authLinkFromCode.userId)
       },
     })
 
