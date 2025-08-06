@@ -6,7 +6,7 @@ import { authLinks } from '../../db/schema'
 import { env } from '../../env'
 
 export const sendAuthLink = new Elysia().post(
-  'authenticate',
+  '/authenticate',
   async ({ body }) => {
     const { email } = body
 
