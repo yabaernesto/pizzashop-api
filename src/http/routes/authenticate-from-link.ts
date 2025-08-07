@@ -4,17 +4,11 @@ import Elysia, { t } from 'elysia'
 
 import { db } from '../../db/connection'
 import { authLinks } from '../../db/schema'
-import { type AuthContext, auth } from '../auth'
+import { auth } from '../auth'
 
-export const authenticateFormLink = new Elysia().use(auth).get(
+export const authenticateFromLink = new Elysia().use(auth).get(
   '/auth-links/authenticate',
-  async (
-    ctx: AuthContext & {
-      query: { code: string; redirect: string }
-      redirect: (url: string) => void
-    }
-  ) => {
-    const { query, signUser, redirect } = ctx
+  async ({ query, signUser, redirect }) => {
     const { code, redirect: redirection } = query
 
     const authLinkFromCode = await db.query.authLinks.findFirst({

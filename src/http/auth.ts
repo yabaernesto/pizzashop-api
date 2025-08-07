@@ -9,11 +9,6 @@ const jwtPayload = t.Object({
   restaurantId: t.Optional(t.String()),
 })
 
-export type AuthContext = {
-  signUser: (payload: Static<typeof jwtPayload>) => Promise<void>
-  signOut: () => void
-}
-
 export const auth = new Elysia()
   .use(
     jwt({
@@ -22,7 +17,7 @@ export const auth = new Elysia()
     })
   )
   .use(cookie())
-  .derive<AuthContext>(({ jwt: { sign }, setCookie, removeCookie }) => ({
+  .derive(({ jwt: { sign, verify }, setCookie, removeCookie, cookie }) => ({
     signUser: async (payload: Static<typeof jwtPayload>) => {
       const token = await sign(payload)
 
@@ -34,7 +29,21 @@ export const auth = new Elysia()
         secure: true,
       })
     },
+
     signOut: () => {
       removeCookie('auth')
+    },
+
+    getCurrentUser: async () => {
+      const payload = await verify(cookie.auth)
+
+      if (!payload) {
+        throw new Error('Unauthorized!')
+      }
+
+      return {
+        userId: payload.sub,
+        restaurantId: payload.restaurantId,
+      }
     },
   }))
