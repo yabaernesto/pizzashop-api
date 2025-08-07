@@ -3,6 +3,7 @@ import { Elysia } from 'elysia'
 import { env } from '../env'
 
 import { authenticateFromLink } from './routes/authenticate-from-link'
+import { getManagedRestaurant } from './routes/get-managed-restaurant'
 import { getProfile } from './routes/get-profile'
 import { registerRestaurant } from './routes/register-restaurant'
 import { sendAuthLink } from './routes/send-auth-link'
@@ -14,6 +15,7 @@ const app = new Elysia()
   .use(authenticateFromLink)
   .use(signOut)
   .use(getProfile)
+  .use(getManagedRestaurant)
 
 app.listen(env.PORT, () => {
   // biome-ignore lint/suspicious/noConsole: show server
