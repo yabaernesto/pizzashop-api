@@ -3,6 +3,7 @@ import jwt from '@elysiajs/jwt'
 import Elysia, { type Context, type Static, t } from 'elysia'
 
 import { env } from '../env'
+import { UnauthorizedError } from './errors/unauthorized-error'
 
 const jwtPayload = t.Object({
   sub: t.String(),
@@ -15,10 +16,23 @@ export type AuthHelpers = {
   getCurrentUser: () => Promise<{ userId: string; restaurantId?: string }>
 }
 
-// Use este tipo nas rotas para garantir acesso aos helpers e ao contexto padrão
 export type AuthContext = Context & AuthHelpers
 
 export const auth = new Elysia()
+  .error({
+    UNAUTHORIZED: UnauthorizedError,
+  })
+  .onError(({ error, code, set }) => {
+    switch (code) {
+      case 'UNAUTHORIZED': {
+        set.status = 401
+        return { code, message: error.message }
+      }
+      default: {
+        set.status = 400
+      }
+    }
+  })
   .use(
     jwt({
       secret: env.JWT_SECRET_KEY,
@@ -47,7 +61,7 @@ export const auth = new Elysia()
       const payload = await verify(cookie.auth)
 
       if (!payload) {
-        throw new Error('Unauthorized!')
+        throw new UnauthorizedError()
       }
 
       return {

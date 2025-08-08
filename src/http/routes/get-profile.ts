@@ -2,6 +2,7 @@ import Elysia from 'elysia'
 
 import { db } from '../../db/connection'
 import { type AuthContext, auth } from '../auth'
+import { UnauthorizedError } from '../errors/unauthorized-error'
 
 export const getProfile = new Elysia()
   .use(auth)
@@ -15,7 +16,7 @@ export const getProfile = new Elysia()
     })
 
     if (!user) {
-      throw new Error('User not found.')
+      throw new UnauthorizedError()
     }
 
     return user

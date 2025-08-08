@@ -17,6 +17,21 @@ const app = new Elysia()
   .use(signOut)
   .use(getProfile)
   .use(getManagedRestaurant)
+  .onError(({ code, error, set }) => {
+    switch (code) {
+      case 'VALIDATION': {
+        set.status = error.status
+
+        return error.toResponse()
+      }
+      default: {
+        // biome-ignore lint/suspicious/noConsole: show error
+        console.error(error)
+
+        return new Response(null, { status: 500 })
+      }
+    }
+  })
 
 app.listen(env.PORT, () => {
   // biome-ignore lint/suspicious/noConsole: show server
