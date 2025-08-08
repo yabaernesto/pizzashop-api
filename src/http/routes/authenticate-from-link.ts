@@ -4,12 +4,17 @@ import Elysia, { t } from 'elysia'
 
 import { db } from '../../db/connection'
 import { authLinks } from '../../db/schema'
-import { auth } from '../auth'
+import { type AuthContext, auth } from '../auth'
 
 export const authenticateFromLink = new Elysia().use(auth).get(
   '/auth-links/authenticate',
-  async ({ query, signUser, redirect }) => {
-    const { code, redirect: redirection } = query
+  async (
+    ctx: AuthContext & {
+      query: { code: string; redirect: string }
+      redirect: (url: string) => void
+    }
+  ) => {
+    const { code, redirect: redirection } = ctx.query
 
     const authLinkFromCode = await db.query.authLinks.findFirst({
       where(fields, { eq: eqLocal }) {
@@ -36,14 +41,14 @@ export const authenticateFromLink = new Elysia().use(auth).get(
       },
     })
 
-    await signUser({
+    await ctx.signUser({
       sub: authLinkFromCode.userId,
       restaurantId: managedRestaurant?.id,
     })
 
     await db.delete(authLinks).where(eq(authLinks.code, code))
 
-    redirect(redirection)
+    ctx.redirect(redirection)
   },
   {
     query: t.Object({

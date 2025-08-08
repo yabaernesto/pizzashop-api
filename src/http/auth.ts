@@ -1,6 +1,6 @@
 import cookie from '@elysiajs/cookie'
 import jwt from '@elysiajs/jwt'
-import Elysia, { type Static, t } from 'elysia'
+import Elysia, { type Context, type Static, t } from 'elysia'
 
 import { env } from '../env'
 
@@ -8,6 +8,15 @@ const jwtPayload = t.Object({
   sub: t.String(),
   restaurantId: t.Optional(t.String()),
 })
+
+export type AuthHelpers = {
+  signUser: (payload: Static<typeof jwtPayload>) => Promise<void>
+  signOut: () => void
+  getCurrentUser: () => Promise<{ userId: string; restaurantId?: string }>
+}
+
+// Use este tipo nas rotas para garantir acesso aos helpers e ao contexto padrão
+export type AuthContext = Context & AuthHelpers
 
 export const auth = new Elysia()
   .use(

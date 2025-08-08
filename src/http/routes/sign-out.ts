@@ -1,9 +1,9 @@
 import Elysia from 'elysia'
 
-import { auth } from '../auth'
+import { type AuthContext, auth } from '../auth'
 
 export const signOut = new Elysia()
   .use(auth)
-  .post('/sign-out', ({ signOut: internalSignOut }) => {
-    internalSignOut()
+  .post('/sign-out', (ctx: AuthContext) => {
+    ctx.signOut()
   })
