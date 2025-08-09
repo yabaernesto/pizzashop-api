@@ -22,6 +22,20 @@
       "when": 1754773581032,
       "tag": "0002_exotic_supreme_intelligence",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1754775597399,
+      "tag": "0003_woozy_fantastic_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1754779801423,
+      "tag": "0004_rich_betty_ross",
+      "breakpoints": true
     }
   ]
 }
