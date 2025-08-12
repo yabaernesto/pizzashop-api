@@ -14,8 +14,34 @@ export const getOrderDetails = new Elysia().use(auth).get(
     }
 
     const order = await db.query.orders.findFirst({
+      columns: {
+        id: true,
+        status: true,
+        totalInCents: true,
+        createdAt: true,
+      },
       with: {
-        customer: true,
+        customer: {
+          columns: {
+            name: true,
+            phone: true,
+            email: true,
+          },
+        },
+        orderItems: {
+          columns: {
+            id: true,
+            priceInCents: true,
+            quantity: true,
+          },
+          with: {
+            product: {
+              columns: {
+                name: true,
+              },
+            },
+          },
+        },
       },
       where(fields, { eq }) {
         return eq(fields.id, orderId)
