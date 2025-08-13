@@ -46,19 +46,15 @@ export const getMonthReceipt = new Elysia()
       (monthReceipt) => monthReceipt.monthWithYear === lastMonthWithYear
     )
 
-    let diffFromLastMonth = 0
-    if (
-      currentMonthReceipt &&
-      lastMonthReceipt &&
-      lastMonthReceipt.receipt > 0
-    ) {
-      const percentChange =
-        (currentMonthReceipt.receipt * 100) / lastMonthReceipt.receipt
-      diffFromLastMonth = Number((percentChange - 100).toFixed(2))
-    }
+    const diffFromLastMonth =
+      currentMonthReceipt && lastMonthReceipt
+        ? (currentMonthReceipt.receipt * 100) / lastMonthReceipt.receipt
+        : null
 
     return {
-      receipt: currentMonthReceipt?.receipt ?? 0,
-      diffFromLastMonth,
+      receipt: currentMonthReceipt?.receipt,
+      diffFromLastMonth: diffFromLastMonth
+        ? Number((diffFromLastMonth - 100).toFixed(2))
+        : 0,
     }
   })
