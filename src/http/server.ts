@@ -14,6 +14,7 @@ import { getMothCanceledOrdersAmount } from './routes/get-moth-canceled-orders-a
 import { getMothOrdersAmount } from './routes/get-moth-orders-amount'
 import { getOrderDetails } from './routes/get-order-details'
 import { getOrders } from './routes/get-orders'
+import { getPopularProducts } from './routes/get-popular-products'
 import { getProfile } from './routes/get-profile'
 import { registerRestaurant } from './routes/register-restaurant'
 import { sendAuthLink } from './routes/send-auth-link'
@@ -37,6 +38,7 @@ const app = new Elysia()
   .use(getDayOrderAmount)
   .use(getMothOrdersAmount)
   .use(getMothCanceledOrdersAmount)
+  .use(getPopularProducts)
   .onError(({ code, error, set }) => {
     switch (code) {
       case 'VALIDATION': {
