@@ -1,15 +1,14 @@
 import { desc, eq, sum } from 'drizzle-orm'
-import Elysia from 'elysia'
+import type Elysia from 'elysia'
 
 import { db } from '../../db/connection'
 import { orderItems, orders, products } from '../../db/schema'
 import { type AuthContext, auth } from '../auth'
 import { UnauthorizedError } from '../errors/unauthorized-error'
 
-export const getPopularProducts = new Elysia()
-  .use(auth)
-  .get('/metrics/popular-products', async (ctx: AuthContext) => {
-    const { restaurantId } = await getCurrentUser()
+export const getPopularProducts = (app: Elysia) =>
+  app.use(auth).get('/metrics/popular-products', async (ctx: AuthContext) => {
+    const { restaurantId } = await ctx.getCurrentUser()
 
     if (!restaurantId) {
       throw new UnauthorizedError()

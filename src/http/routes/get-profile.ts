@@ -1,12 +1,11 @@
-import Elysia from 'elysia'
+import type Elysia from 'elysia'
 
 import { db } from '../../db/connection'
 import { type AuthContext, auth } from '../auth'
 import { UnauthorizedError } from '../errors/unauthorized-error'
 
-export const getProfile = new Elysia()
-  .use(auth)
-  .get('/me', async (ctx: AuthContext) => {
+export const getProfile = (app: Elysia) =>
+  app.use(auth).get('/me', async (ctx: AuthContext) => {
     const { userId } = await ctx.getCurrentUser()
 
     const user = await db.query.users.findFirst({

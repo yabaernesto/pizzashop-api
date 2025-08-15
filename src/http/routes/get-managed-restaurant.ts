@@ -1,11 +1,10 @@
-import Elysia from 'elysia'
+import type Elysia from 'elysia'
 
 import { db } from '../../db/connection'
 import { type AuthContext, auth } from '../auth'
 
-export const getManagedRestaurant = new Elysia()
-  .use(auth)
-  .get('/managed-restaurant', async (ctx: AuthContext) => {
+export const getManagedRestaurant = (app: Elysia) =>
+  app.use(auth).get('/managed-restaurant', async (ctx: AuthContext) => {
     const { restaurantId } = await ctx.getCurrentUser()
 
     if (!restaurantId) {

@@ -1,15 +1,14 @@
 import dayjs from 'dayjs'
 import { and, eq, gte, sql, sum } from 'drizzle-orm'
-import Elysia from 'elysia'
+import type Elysia from 'elysia'
 
 import { db } from '../../db/connection'
 import { orders } from '../../db/schema'
 import { auth } from '../auth'
 import { UnauthorizedError } from '../errors/unauthorized-error'
 
-export const getMonthReceipt = new Elysia()
-  .use(auth)
-  .get('/metrics/month-receipt', async ({ getCurrentUser }) => {
+export const getMonthReceipt = (app: Elysia) =>
+  app.use(auth).get('/metrics/month-receipt', async ({ getCurrentUser }) => {
     const { restaurantId } = await getCurrentUser()
 
     if (!restaurantId) {

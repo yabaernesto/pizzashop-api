@@ -1,9 +1,8 @@
-import Elysia from 'elysia'
+import type Elysia from 'elysia'
 
-import { type AuthContext, auth } from '../auth'
+import type { AuthContext } from '../auth'
 
-export const signOut = new Elysia()
-  .use(auth)
-  .post('/sign-out', (ctx: AuthContext) => {
+export const signOut = (app: Elysia) =>
+  app.post('/sign-out', (ctx: AuthContext) => {
     ctx.signOut()
   })
