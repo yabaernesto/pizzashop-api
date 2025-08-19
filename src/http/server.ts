@@ -1,10 +1,12 @@
 import { Elysia } from 'elysia'
 
-const app = new Elysia().get('/', () => {
-  return 'Hello world!'
-})
+import { env } from '../env'
+import { registerRestaurant } from './routes/register-restaurant'
+import { sendAuthLink } from './routes/send-auth-link'
 
-app.listen(3333, () => {
+const app = new Elysia().use(registerRestaurant).use(sendAuthLink)
+
+app.listen(env.PORT, () => {
   // biome-ignore lint/suspicious/noConsole: sho server
-  console.log('HTTP server running!')
+  console.log('🔥 HTTP server running!')
 })
