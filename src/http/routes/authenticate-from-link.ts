@@ -10,7 +10,7 @@ import { auth } from '../auth'
 export const authenticateFromLink = (app: Elysia) => {
   return app.use(auth).get(
     '/auth-links/authenticate',
-    async ({ query, redirect: redirection, jwt: { sign }, signUser }) => {
+    async ({ query, redirect: redirection, signUser }) => {
       const { code, redirect } = query
 
       const authLinkFromCode = await db.query.authLinks.findFirst({
