@@ -2,6 +2,7 @@ import type Elysia from 'elysia'
 
 import { db } from '../../db/connection'
 import { auth } from '../auth'
+import { UnauthorizedError } from '../errors/unauthorized-error'
 
 export const getProfile = (app: Elysia) => {
   return app.use(auth).get('/me', async ({ getCurrentUser }) => {
@@ -14,7 +15,7 @@ export const getProfile = (app: Elysia) => {
     })
 
     if (!user) {
-      throw new Error('User not found.')
+      throw new UnauthorizedError()
     }
 
     return user
