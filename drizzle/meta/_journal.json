@@ -15,6 +15,13 @@
       "when": 1755610888531,
       "tag": "0001_talented_captain_stacy",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1757950590179,
+      "tag": "0002_great_vanisher",
+      "breakpoints": true
     }
   ]
 }
