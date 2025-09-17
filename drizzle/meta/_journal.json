@@ -22,6 +22,27 @@
       "when": 1757950590179,
       "tag": "0002_great_vanisher",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1758015484234,
+      "tag": "0003_closed_misty_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1758113091871,
+      "tag": "0004_aberrant_wasp",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1758113181715,
+      "tag": "0005_harsh_namorita",
+      "breakpoints": true
     }
   ]
 }
