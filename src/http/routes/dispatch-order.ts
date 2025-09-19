@@ -19,8 +19,11 @@ export const dispatchOrder = (app: Elysia) => {
 
       const order = await db.query.orders.findFirst({
         // biome-ignore lint/nursery/noShadow: imports
-        where(fields, { eq }) {
-          return eq(fields.id, orderId)
+        where(fields, { eq, and }) {
+          return and(
+            eq(fields.id, orderId),
+            eq(fields.restaurantId, restaurantId)
+          )
         },
       })
 
