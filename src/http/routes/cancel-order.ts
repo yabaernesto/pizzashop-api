@@ -18,8 +18,12 @@ export const cancelOrder = (app: Elysia) => {
       }
 
       const order = await db.query.orders.findFirst({
-        where(fields, { eq }) {
-          return eq(fields.id, orderId)
+        // biome-ignore lint/nursery/noShadow: role
+        where(fields, { eq, and }) {
+          return and(
+            eq(fields.id, orderId),
+            eq(fields.restaurantId, restaurantId)
+          )
         },
       })
 
