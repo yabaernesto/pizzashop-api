@@ -1,3 +1,4 @@
+import { cors } from '@elysiajs/cors'
 import { Elysia } from 'elysia'
 
 import { env } from '../env'
@@ -22,6 +23,12 @@ import { sendAuthLink } from './routes/send-auth-link'
 import { signOut } from './routes/sign-out'
 
 const app = new Elysia()
+  .use(
+    cors({
+      origin: ['http://localhost:5173'],
+      credentials: true,
+    })
+  )
   .use(registerRestaurant)
   .use(sendAuthLink)
   .use(authenticateFromLink)
