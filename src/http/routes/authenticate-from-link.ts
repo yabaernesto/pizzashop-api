@@ -4,13 +4,12 @@ import { type Elysia, t } from 'elysia'
 
 import { db } from '../../db/connection'
 import { authLinks } from '../../db/schema'
-
 import { auth } from '../auth'
 
 export const authenticateFromLink = (app: Elysia) => {
   return app.use(auth).get(
     '/auth-links/authenticate',
-    async ({ query, redirect: redirection, signUser }) => {
+    async ({ query, signUser }) => {
       const { code, redirect } = query
 
       const authLinkFromCode = await db.query.authLinks.findFirst({
@@ -38,14 +37,21 @@ export const authenticateFromLink = (app: Elysia) => {
         },
       })
 
-      signUser({
+      // define o cookie de autenticação
+      await signUser({
         sub: authLinkFromCode.userId,
         restaurantId: managedRestaurant?.id,
       })
 
       await db.delete(authLinks).where(eq(authLinks.code, code))
 
-      // return redirection(redirect)
+      // ⚡ retorno explícito com redirecionamento HTTP padrão
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: redirect,
+        },
+      })
     },
     {
       query: t.Object({

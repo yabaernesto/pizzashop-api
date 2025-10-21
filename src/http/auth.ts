@@ -12,44 +12,47 @@ const jwtPayloadSchema = t.Object({
 })
 
 export const auth = (app: Elysia) => {
-  return app
-    .error({
-      UNAUTHORIZED: UnauthorizedError,
-      NOT_A_MANAGER: NotAManagerError,
-    })
-    .onError(({ code, error, set }) => {
-      switch (code) {
-        case 'UNAUTHORIZED':
-          set.status = 401
-          return { code, message: error.message }
-        case 'NOT_A_MANAGER':
-          set.status = 401
-          return { code, message: error.message }
-      }
-    })
-    .use(cookie())
-    .use(
-      jwt({
-        secret: env.JWT_SECRET_KEY,
-        schema: jwtPayloadSchema,
+  return (
+    app
+      .error({
+        UNAUTHORIZED: UnauthorizedError,
+        NOT_A_MANAGER: NotAManagerError,
       })
-    )
-    .derive(({ jwt, cookie, setCookie, removeCookie }) => {
-      return {
+      .onError(({ code, error, set }) => {
+        switch (code) {
+          case 'UNAUTHORIZED':
+          case 'NOT_A_MANAGER':
+            set.status = 401
+            return { code, message: error.message }
+        }
+      })
+      // Plugins necessários
+      .use(cookie())
+      .use(
+        jwt({
+          secret: env.JWT_SECRET_KEY,
+          schema: jwtPayloadSchema,
+        })
+      )
+
+      // 🔐 Helpers que acessam cookies e JWT corretamente
+      .onBeforeHandle(({ jwt, setCookie, cookie, removeCookie }) => ({
         signUser: async (payload: Static<typeof jwtPayloadSchema>) => {
-          setCookie('auth', await jwt.sign(payload), {
+          const token = await jwt.sign(payload)
+
+          setCookie('auth', token, {
             httpOnly: true,
-            maxAge: 60 * 60 * 24 * 7, // 7 days
+            maxAge: 60 * 60 * 24 * 7, // 7 dias
             path: '/',
           })
         },
 
         getCurrentUser: async () => {
-          const payload = await jwt.verify(cookie.auth)
+          const token = cookie.auth
+          if (!token) throw new UnauthorizedError()
 
-          if (!payload) {
-            throw new UnauthorizedError()
-          }
+          const payload = await jwt.verify(token)
+          if (!payload) throw new UnauthorizedError()
 
           return {
             userId: payload.sub,
@@ -60,10 +63,10 @@ export const auth = (app: Elysia) => {
         signOut: () => {
           removeCookie('auth')
         },
-      }
-    })
-    .derive(({ getCurrentUser }) => {
-      return {
+      }))
+
+      // 🚀 Helper adicional
+      .derive(({ getCurrentUser }) => ({
         getManagedRestaurantId: async () => {
           const { restaurantId } = await getCurrentUser()
 
@@ -73,6 +76,6 @@ export const auth = (app: Elysia) => {
 
           return restaurantId
         },
-      }
-    })
+      }))
+  )
 }
