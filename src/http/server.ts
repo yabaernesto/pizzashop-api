@@ -21,6 +21,7 @@ import { getProfile } from './routes/get-profile'
 import { registerRestaurant } from './routes/register-restaurant'
 import { sendAuthLink } from './routes/send-auth-link'
 import { signOut } from './routes/sign-out'
+import { updateProfile } from './routes/update-profile'
 
 const app = new Elysia()
   .use(
@@ -34,6 +35,7 @@ const app = new Elysia()
   .use(authenticateFromLink)
   .use(signOut)
   .use(getProfile)
+  .use(updateProfile)
   .use(getManagedRestaurant)
   .use(getOrderDetails)
   .use(approveOrder)
